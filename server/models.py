@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.dispatch import receiver
+from .validators import validate_icon_image_size
 
 
 def server_icon_upload_path(instance, filename):
@@ -69,7 +70,12 @@ class Channel(models.Model):
     banner = models.ImageField(
         upload_to=server_banner_upload_path, null=True, blank=True
     )
-    icon = models.ImageField(upload_to=server_icon_upload_path, null=True, blank=True)
+    icon = models.ImageField(
+        upload_to=server_icon_upload_path,
+        null=True,
+        blank=True,
+        validators=[validate_icon_image_size],
+    )
 
     def save(self, *args, **kwargs):
         if self.id:
