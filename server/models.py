@@ -18,8 +18,11 @@ class Server(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="server_category"
     )
-    description = models.TextField(max_length=250, null=True)
+    description = models.TextField(max_length=250, blank=True, null=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL)
+
+    def __str__(self):
+        return self.name
 
 
 class Channel(models.Model):
@@ -33,7 +36,7 @@ class Channel(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        self.name = self.name.lower
+        self.name = self.name.lower()
         super(Channel, self).save(*args, **kwargs)
 
     def __str__(self):
