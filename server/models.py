@@ -4,6 +4,14 @@ from django.shortcuts import get_object_or_404
 from django.dispatch import receiver
 
 
+def server_icon_upload_path(instance, filename):
+    return f"server/{instance.id}/server_icons/{filename}"
+
+
+def server_banner_upload_path(instance, filename):
+    return f"server/{instance.id}/server_banner/{filename}"
+
+
 def category_icon_upload_path(instance, filename):
     return f"category/{instance.id}/category_icon/{filename}"
 
@@ -21,7 +29,7 @@ class Category(models.Model):
                 existingCategory.icon.delete(save=False)
         super(Category, self).save(*args, **kwargs)
 
-    # Delete the icon if the category is deleted
+    # Delete the icon from the storage if the category is deleted
     @receiver(models.signals.pre_delete, sender="server.Category")
     def category_delete_files(sender, instance, **kwargs):
         for field in instance._meta.fields:
@@ -58,10 +66,29 @@ class Channel(models.Model):
     server = models.ForeignKey(
         Server, on_delete=models.CASCADE, related_name="channel_server"
     )
+    banner = models.ImageField(
+        upload_to=server_banner_upload_path, null=True, blank=True
+    )
+    icon = models.ImageField(upload_to=server_icon_upload_path, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
-        super(Channel, self).save(*args, **kwargs)
+        if self.id:
+            existingServer = get_object_or_404(Server, id=self.id)
+            if existingServer.icon != self.icon:
+                existingServer.icon.delete(save=False)
+
+            if existingServer.banner != self.banner:
+                existingServer.banner.delete(save=False)
+        super(Server, self).save(*args, **kwargs)
+
+    # Delete the icon and banner from storage if the server is deleted
+    @receiver(models.signals.pre_delete, sender="server.Server")
+    def category_delete_files(sender, instance, **kwargs):
+        for field in instance._meta.fields:
+            if field.name == "icon" or field.name == "banner":
+                file = getattr(instance, field.name)
+                if file:
+                    file.delete(save=False)
 
     def __str__(self):
         return self.name
