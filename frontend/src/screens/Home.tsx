@@ -1,5 +1,14 @@
+import { Box, CssBaseline } from "@mui/material";
+import PrimaryAppBar from "./templates/PrimaryAppBar";
+
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <PrimaryAppBar />
+      Home
+    </Box>
+  );
 };
 
 export default Home;
