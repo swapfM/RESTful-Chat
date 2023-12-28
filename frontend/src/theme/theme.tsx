@@ -1,9 +1,13 @@
-import { createTheme } from "@mui/material";
+import { createTheme, responsiveFontSizes } from "@mui/material";
 
 declare module "@mui/material/styles" {
   interface Theme {
     primaryAppBar: {
       height: number;
+    };
+    primaryDraw: {
+      width: number;
+      closed: number;
     };
   }
 
@@ -11,13 +15,24 @@ declare module "@mui/material/styles" {
     primaryAppBar: {
       height: number;
     };
+    primaryDraw: {
+      width: number;
+      closed: number;
+    };
   }
 }
 
 export const createMuiTheme = () => {
-  const theme = createTheme({
+  let theme = createTheme({
+    typography: {
+      fontFamily: ["IBM Plex Sans", "sans-serif"].join(","),
+    },
     primaryAppBar: {
       height: 50,
+    },
+    primaryDraw: {
+      width: 240,
+      closed: 70,
     },
     components: {
       MuiAppBar: {
@@ -28,7 +43,7 @@ export const createMuiTheme = () => {
       },
     },
   });
-
+  theme = responsiveFontSizes(theme);
   return theme;
 };
 
