@@ -5,9 +5,8 @@ import SecondaryDraw from "./templates/SecondaryDraw";
 import Main from "./templates/Main";
 import PopularChannels from "../components/PrimaryDraw/PopularChannels";
 import ExploreCategories from "../components/SecondaryDraw/ExploreCategories";
-import ExploreServers from "../components/Main/ExploreServers";
 
-const Home: React.FC = () => {
+const Explore: React.FC = () => {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -18,11 +17,9 @@ const Home: React.FC = () => {
       <SecondaryDraw>
         <ExploreCategories />
       </SecondaryDraw>
-      <Main>
-        <ExploreServers />
-      </Main>
+      <Main />
     </Box>
   );
 };
 
-export default Home;
+export default Explore;

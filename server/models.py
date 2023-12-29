@@ -28,6 +28,7 @@ class Category(models.Model):
             existingCategory = get_object_or_404(Category, id=self.id)
             if existingCategory.icon != self.icon:
                 existingCategory.icon.delete(save=False)
+        self.name = self.name.lower()
         super(Category, self).save(*args, **kwargs)
 
     # Delete the icon from the storage if the category is deleted

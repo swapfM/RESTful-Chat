@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Server, Channel
+from .models import Server, Channel, Category
 
 
 class ChannelSerializer(serializers.ModelSerializer):
@@ -29,3 +29,9 @@ class ServerSerializer(serializers.ModelSerializer):
         if not num_members:
             data.pop("num_members", None)
         return data
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
