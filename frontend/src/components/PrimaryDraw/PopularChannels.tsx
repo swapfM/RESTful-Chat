@@ -26,10 +26,7 @@ interface Server {
   icon: string;
 }
 const PopularChannels: React.FC<Props> = ({ open }) => {
-  const { dataCRUD, error, isLoading, fetchData } = useCrud<Server>(
-    [],
-    "/server/select/"
-  );
+  const { dataCRUD, fetchData } = useCrud<Server>([], "/server/select/");
 
   useEffect(() => {
     fetchData();

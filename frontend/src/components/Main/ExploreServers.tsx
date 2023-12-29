@@ -11,7 +11,6 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemButton,
   ListItemIcon,
   ListItemText,
   Typography,
@@ -19,11 +18,6 @@ import {
 
 import { Link, useParams } from "react-router-dom";
 import { MEDIA_URL } from "../../../config";
-import ExploreCategories from "../SecondaryDraw/ExploreCategories";
-
-interface Props {
-  open: boolean;
-}
 
 interface Server {
   id: number;

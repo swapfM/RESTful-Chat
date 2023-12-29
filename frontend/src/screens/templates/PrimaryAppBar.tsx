@@ -10,6 +10,8 @@ import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Box, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
+import ExploreCategories from "../../components/SecondaryDraw/ExploreCategories";
+import AccountButton from "../../components/PrimaryAppBar/AccountButton";
 
 const PrimaryAppBar: React.FC = () => {
   const [sideMenu, setSideMenu] = useState<boolean>(false);
@@ -25,6 +27,18 @@ const PrimaryAppBar: React.FC = () => {
       setSideMenu(false);
     }
   }, [isSmallScreen, sideMenu]);
+
+  const list = () => {
+    return (
+      <Box
+        sx={{ paddingTop: `${theme.primaryAppBar.height}px`, minWidth: 200 }}
+        role="presentation"
+        onClick={toggleDrawer}
+      >
+        <ExploreCategories />
+      </Box>
+    );
+  };
   return (
     <AppBar
       sx={{
@@ -40,7 +54,7 @@ const PrimaryAppBar: React.FC = () => {
           minHeight: theme.primaryAppBar.height,
         }}
       >
-        <Box sx={{ display: { xd: "block", sm: "none" } }}>
+        <Box sx={{ display: { xs: "block", sm: "none" } }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -51,12 +65,9 @@ const PrimaryAppBar: React.FC = () => {
             <MenuIcon />
           </IconButton>
         </Box>
+
         <Drawer anchor="left" open={sideMenu}>
-          {[...Array(100)].map((_, i) => (
-            <Typography key={i} paragraph>
-              {i + 1}
-            </Typography>
-          ))}
+          {list()}
         </Drawer>
         <Link href="/" underline="none" color="inherit">
           <Typography
@@ -68,6 +79,8 @@ const PrimaryAppBar: React.FC = () => {
             RESTful-Chats
           </Typography>
         </Link>
+        <Box sx={{ flexGrow: 1 }}></Box>
+        <AccountButton />
       </Toolbar>
     </AppBar>
   );

@@ -23,10 +23,8 @@ interface Category {
 
 const ExploreCategories: React.FC = () => {
   const theme = useTheme();
-  const { dataCRUD, error, isLoading, fetchData } = useCrud<Category>(
-    [],
-    "/server/category/"
-  );
+  const isDarkMode = theme.palette.mode === "dark";
+  const { dataCRUD, fetchData } = useCrud<Category>([], "/server/category/");
 
   useEffect(() => {
     fetchData();
@@ -71,6 +69,7 @@ const ExploreCategories: React.FC = () => {
                         height: "25px",
                         display: "block",
                         margin: "auto",
+                        filter: isDarkMode ? "invert(100%)" : "none",
                       }}
                     />
                   </ListItemAvatar>
