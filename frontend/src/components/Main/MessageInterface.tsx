@@ -1,0 +1,55 @@
+import { useState } from "react";
+import useWebSocket from "react-use-websocket";
+const socketUrl = "ws://127.0.0.1:8000/ws/test";
+
+const MessageInterface = () => {
+  const [newMessage, setNewMessage] = useState<string[]>([]);
+
+  const [message, setMessage] = useState("");
+
+  const { sendJsonMessage } = useWebSocket(socketUrl, {
+    onOpen: () => {
+      console.log("connected");
+    },
+    onClose: () => {
+      console.log("closed");
+    },
+    onError: () => {
+      console.log("Error");
+    },
+    onMessage: (message) => {
+      const data = JSON.parse(message.data);
+      setNewMessage((prev) => [...prev, data.new_message]);
+    },
+  });
+  return (
+    <div>
+      {newMessage.map((msg, index) => {
+        return (
+          <div key={index}>
+            <p>{msg}</p>
+          </div>
+        );
+      })}
+      <form>
+        <label>
+          EnterMessage:
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </label>
+      </form>
+      <button
+        onClick={() => {
+          sendJsonMessage({ type: "message", message });
+        }}
+      >
+        Send Message
+      </button>
+    </div>
+  );
+};
+
+export default MessageInterface;
