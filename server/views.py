@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 class ServerListViewSet(viewsets.ViewSet):
     # Initial queryset containing all servers
     queryset = Server.objects.all()
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @server_list_docs
     def list(self, request):
@@ -24,8 +24,8 @@ class ServerListViewSet(viewsets.ViewSet):
         with_num_members = request.query_params.get("with_num_members") == "true"
 
         # Check authentication if filtering by user
-        if not request.user.is_authenticated:
-            raise AuthenticationFailed()
+        # if not request.user.is_authenticated:
+        #    raise AuthenticationFailed()
 
         # Filtering by category if provided
         if category:

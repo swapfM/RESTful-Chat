@@ -54,19 +54,6 @@ class Server(models.Model):
     description = models.TextField(max_length=250, blank=True, null=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
-    def __str__(self):
-        return f"{self.name}-{self.id}"
-
-
-class Channel(models.Model):
-    name = models.CharField(max_length=100)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="channel_owner"
-    )
-    topic = models.CharField(max_length=100)
-    server = models.ForeignKey(
-        Server, on_delete=models.CASCADE, related_name="channel_server"
-    )
     banner = models.ImageField(
         upload_to=server_banner_upload_path,
         null=True,
@@ -92,12 +79,26 @@ class Channel(models.Model):
 
     # Delete the icon and banner from storage if the server is deleted
     @receiver(models.signals.pre_delete, sender="server.Server")
-    def category_delete_files(sender, instance, **kwargs):
+    def server_delete_files(sender, instance, **kwargs):
         for field in instance._meta.fields:
             if field.name == "icon" or field.name == "banner":
                 file = getattr(instance, field.name)
                 if file:
                     file.delete(save=False)
+
+    def __str__(self):
+        return f"{self.name}-{self.id}"
+
+
+class Channel(models.Model):
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="channel_owner"
+    )
+    topic = models.CharField(max_length=100)
+    server = models.ForeignKey(
+        Server, on_delete=models.CASCADE, related_name="channel_server"
+    )
 
     def __str__(self):
         return self.name

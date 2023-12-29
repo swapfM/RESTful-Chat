@@ -47,6 +47,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ["*"]
+ALLOWED_HOSTS = ["*"]
+
 ROOT_URLCONF = "backend.urls"
 
 TEMPLATES = [
@@ -142,5 +147,3 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": True,
 }
-
-CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:5173"]

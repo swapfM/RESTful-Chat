@@ -20,9 +20,10 @@ const useCrud = <T>(initialData: T[], apiURL: string): IuseCrud<T> => {
     try {
       const response = await jwtAxios.get(`${BASE_URL}${apiURL}`, {});
       const data = response.data;
-      setDataCRUD(() => data);
-      setError(() => null);
-      setIsLoading(() => false);
+
+      setDataCRUD(data);
+      setError(null);
+      setIsLoading(false);
       return data;
     } catch (error: unknown) {
       if (
