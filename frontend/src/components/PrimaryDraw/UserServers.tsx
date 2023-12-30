@@ -25,7 +25,7 @@ interface Server {
 }
 
 interface ServerChannelsProps {
-  data: Server;
+  data: Server[];
 }
 const UserServers: React.FC<Props & ServerChannelsProps> = ({ open, data }) => {
   return (

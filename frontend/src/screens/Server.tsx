@@ -3,9 +3,6 @@ import PrimaryAppBar from "./templates/PrimaryAppBar";
 import PrimaryDraw from "./templates/PrimaryDraw";
 import SecondaryDraw from "./templates/SecondaryDraw";
 import Main from "./templates/Main";
-import PopularChannels from "../components/PrimaryDraw/PopularChannels";
-import ExploreCategories from "../components/SecondaryDraw/ExploreCategories";
-import ExploreServers from "../components/Main/ExploreServers";
 import MessageInterface from "../components/Main/MessageInterface";
 import ServerChannels from "../components/SecondaryDraw/ServerChannels";
 import UserServers from "../components/PrimaryDraw/UserServers";
@@ -18,7 +15,7 @@ const Server: React.FC = () => {
   const navigate = useNavigate();
   const { serverId, channelId } = useParams();
 
-  const { dataCRUD, error, isLoading, fetchData } = useCrud<Server>(
+  const { dataCRUD, error, fetchData } = useCrud<Server>(
     [],
     `/server/select/?by_serverid=${serverId}`
   );
@@ -54,7 +51,7 @@ const Server: React.FC = () => {
         <ServerChannels data={dataCRUD} />
       </SecondaryDraw>
       <Main>
-        <MessageInterface />
+        <MessageInterface data={dataCRUD} />
       </Main>
     </Box>
   );
