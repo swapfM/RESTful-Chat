@@ -10,10 +10,19 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  TextField,
   Typography,
 } from "@mui/material";
 import MessageInterfaceChannels from "./MessageInterfaceChannels";
+import { useTheme } from "@mui/material/styles";
+import Scroll from "./Scroll";
+import React from "react";
 
+interface SendMessageData {
+  type: string;
+  message: string;
+  [key: string]: unknown;
+}
 interface ServerChannelProps {
   data: Server[];
 }
@@ -25,6 +34,7 @@ interface Message {
 }
 
 const MessageInterface = (props: ServerChannelProps) => {
+  const theme = useTheme();
   const { data } = props;
   const [newMessage, setNewMessage] = useState<Message[]>([]);
 
@@ -61,9 +71,27 @@ const MessageInterface = (props: ServerChannelProps) => {
     onMessage: (message) => {
       const data = JSON.parse(message.data);
       setNewMessage((prev) => [...prev, data.new_message]);
-      console.log(newMessage);
+      setMessage("");
     },
   });
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendJsonMessage({
+        type: "message",
+        message,
+      } as SendMessageData);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    sendJsonMessage({
+      type: "message",
+      message,
+    } as SendMessageData);
+  };
   return (
     <>
       <MessageInterfaceChannels data={data} />
@@ -95,55 +123,82 @@ const MessageInterface = (props: ServerChannelProps) => {
       ) : (
         <div>
           <Box sx={{ overflow: "hidden", p: 0, height: `calc(100vh - 100px)` }}>
-            <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-              {newMessage.map((msg: Message, index: number) => {
-                return (
-                  <ListItem key={index} alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar alt="user image" />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primaryTypographyProps={{
-                        fontSize: "12px",
-                        variant: "body2",
-                      }}
-                      primary={
-                        <Typography
-                          component="span"
-                          variant="body1"
-                          color="text.primary"
-                          sx={{ display: "inline", fontW: 600 }}
-                        >
-                          {msg.sender}
-                        </Typography>
-                      }
-                      secondary={
-                        <Box>
+            <Scroll>
+              <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+                {newMessage.map((msg: Message, index: number) => {
+                  return (
+                    <ListItem key={index} alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar alt="user image" />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primaryTypographyProps={{
+                          fontSize: "12px",
+                          variant: "body2",
+                        }}
+                        primary={
                           <Typography
-                            variant="body1"
-                            style={{
-                              overflow: "visible",
-                              whiteSpace: "normal",
-                              textOverflow: "clip",
-                            }}
-                            sx={{
-                              display: "inline",
-                              lineHeight: 1.2,
-                              fontWeight: 400,
-                              letterSpacing: "-0.2px",
-                            }}
                             component="span"
+                            variant="body1"
                             color="text.primary"
+                            sx={{ display: "inline", fontW: 600 }}
                           >
-                            {msg.content}
+                            {msg.sender}
                           </Typography>
-                        </Box>
-                      }
-                    />
-                  </ListItem>
-                );
-              })}
-            </List>
+                        }
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              variant="body1"
+                              style={{
+                                overflow: "visible",
+                                whiteSpace: "normal",
+                                textOverflow: "clip",
+                              }}
+                              sx={{
+                                display: "inline",
+                                lineHeight: 1.2,
+                                fontWeight: 400,
+                                letterSpacing: "-0.2px",
+                              }}
+                              component="span"
+                              color="text.primary"
+                            >
+                              {msg.content}
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Scroll>
+          </Box>
+          <Box sx={{ position: "sticky", bottom: 0, width: "100%" }}>
+            <form
+              onSubmit={handleSubmit}
+              style={{
+                bottom: 0,
+                right: 0,
+                padding: "1rem",
+                backgroundColor: theme.palette.background.default,
+                zIndex: 1,
+              }}
+            >
+              <Box sx={{ display: "flex" }}>
+                <TextField
+                  fullWidth
+                  multiline
+                  value={message}
+                  minRows={1}
+                  maxRows={4}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  sx={{ flexGrow: 1 }}
+                />
+              </Box>
+            </form>
           </Box>
         </div>
       )}
