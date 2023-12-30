@@ -13,7 +13,7 @@ const SecondaryDraw = ({ children }: SecondaryDrawProps) => {
       sx={{
         minWidth: `${theme.secondaryDraw.width}px`,
         mt: `${theme.primaryAppBar.height}px`,
-        height: `100vh`,
+        height: `calc(100vh-${theme.primaryAppBar.height}px)`,
         borderRight: `1px solid ${theme.palette.divider}`,
         display: { xs: "none", sm: "block" },
         overflow: "auto",

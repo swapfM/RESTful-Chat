@@ -92,6 +92,21 @@ const MessageInterface = (props: ServerChannelProps) => {
       message,
     } as SendMessageData);
   };
+
+  function formatTimeStamp(timestamp: string): string {
+    const date = new Date(Date.parse(timestamp));
+    const formattedDate = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
+
+    const formattedTime = date.toLocaleDateString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return `${formattedDate} at ${formattedTime}`;
+  }
+
   return (
     <>
       <MessageInterfaceChannels data={data} />
@@ -121,7 +136,7 @@ const MessageInterface = (props: ServerChannelProps) => {
           </Box>
         </Box>
       ) : (
-        <div>
+        <>
           <Box sx={{ overflow: "hidden", p: 0, height: `calc(100vh - 100px)` }}>
             <Scroll>
               <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -137,17 +152,27 @@ const MessageInterface = (props: ServerChannelProps) => {
                           variant: "body2",
                         }}
                         primary={
-                          <Typography
-                            component="span"
-                            variant="body1"
-                            color="text.primary"
-                            sx={{ display: "inline", fontW: 600 }}
-                          >
-                            {msg.sender}
-                          </Typography>
+                          <>
+                            <Typography
+                              component="span"
+                              variant="body1"
+                              color="text.primary"
+                              sx={{ display: "inline", fontW: 600 }}
+                            >
+                              {msg.sender}
+                            </Typography>
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              color="textSecondary"
+                            >
+                              {" at "}
+                              {formatTimeStamp(msg.timestamp)}
+                            </Typography>
+                          </>
                         }
                         secondary={
-                          <React.Fragment>
+                          <>
                             <Typography
                               variant="body1"
                               style={{
@@ -166,7 +191,7 @@ const MessageInterface = (props: ServerChannelProps) => {
                             >
                               {msg.content}
                             </Typography>
-                          </React.Fragment>
+                          </>
                         }
                       />
                     </ListItem>
@@ -175,7 +200,7 @@ const MessageInterface = (props: ServerChannelProps) => {
               </List>
             </Scroll>
           </Box>
-          <Box sx={{ position: "sticky", bottom: 0, width: "100%" }}>
+          <Box sx={{ position: "fixed", bottom: 0, width: "70%" }}>
             <form
               onSubmit={handleSubmit}
               style={{
@@ -193,14 +218,14 @@ const MessageInterface = (props: ServerChannelProps) => {
                   value={message}
                   minRows={1}
                   maxRows={4}
-                  onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  onChange={(e) => setMessage(e.target.value)}
                   sx={{ flexGrow: 1 }}
                 />
               </Box>
             </form>
           </Box>
-        </div>
+        </>
       )}
     </>
   );
