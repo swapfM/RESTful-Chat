@@ -25,7 +25,7 @@ const Server: React.FC = () => {
   if (error !== null && error.message === "400") {
     navigate("/");
   }
-
+  console.log(channelId);
   useEffect(() => {
     fetchData();
     const isChannel = (): boolean => {
@@ -41,7 +41,7 @@ const Server: React.FC = () => {
     if (!isChannel()) {
       navigate(`/server/${serverId}`);
     }
-  }, [serverId, navigate, channelId, dataCRUD]);
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>

@@ -1,12 +1,8 @@
-import { useEffect } from "react";
-import useCrud from "../../hooks/useCrud";
 import {
   Box,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Typography,
 } from "@mui/material";

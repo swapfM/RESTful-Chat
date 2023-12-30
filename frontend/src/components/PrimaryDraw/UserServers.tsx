@@ -1,5 +1,3 @@
-import useCrud from "../../hooks/useCrud";
-import { useEffect } from "react";
 import {
   Avatar,
   Box,
