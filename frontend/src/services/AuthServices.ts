@@ -3,7 +3,16 @@ import { AuthServiceProps } from "../@types/auth-service";
 import { useState } from "react";
 
 export function useAuthService(): AuthServiceProps {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    const loggedIn = localStorage.getItem("isLoggedIn");
+
+    if (loggedIn !== null) {
+      return Boolean(loggedIn);
+    } else {
+      return false;
+    }
+  });
+
   const getUserDetails = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -20,6 +29,7 @@ export function useAuthService(): AuthServiceProps {
       localStorage.setItem("username", userDetails.username);
     } catch (error: unknown) {
       setIsLoggedIn(() => false);
+      localStorage.setItem("isLoggedIn", "false");
       return error;
     }
   };
@@ -42,7 +52,9 @@ export function useAuthService(): AuthServiceProps {
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
       localStorage.setItem("userId", getUserIdFromToken(access));
+      localStorage.setItem("isLoggedIn", "true");
       setIsLoggedIn(() => true);
+      getUserDetails();
     } catch (error: unknown) {
       return error;
     }
