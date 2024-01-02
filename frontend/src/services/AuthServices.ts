@@ -1,7 +1,6 @@
 import axios from "axios";
 import { AuthServiceProps } from "../@types/auth-service";
 import { useState } from "react";
-import { responsiveFontSizes } from "@mui/material";
 
 export function useAuthService(): AuthServiceProps {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
@@ -10,36 +9,25 @@ export function useAuthService(): AuthServiceProps {
     return loggedIn !== null && loggedIn === "true";
   });
 
-  // const getUserDetails = async () => {
-  //   try {
-  //     const userId = localStorage.getItem("userId");
-  //     const accessToken = localStorage.getItem("access_token");
-  //     console.log(userId);
-  //     const response = await axios.get(
-  //       `http://127.0.0.1:8000/api/account/?user_id=${userId}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       }
-  //     );
-  //     const userDetails = response.data;
-  //     localStorage.setItem("username", userDetails.username);
-  //   } catch (error: unknown) {
-  //     setIsLoggedIn(() => false);
-  //     localStorage.setItem("isLoggedIn", "false");
-  //     return error;
-  //   }
-  // };
-  // const getUserIdFromToken = (access: string) => {
-  //   const tokenParts = access.split(".");
-  //   const encodedPayload = tokenParts[1];
-  //   const decodedPayload = atob(encodedPayload);
-  //   const payloadData = JSON.parse(decodedPayload);
-  //   const userId = payloadData.user_id;
+  const getUserDetails = async () => {
+    try {
+      const user_id = localStorage.getItem("user_id");
 
-  //   return userId;
-  // };
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/account/?user_id=${user_id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      const userDetails = response.data;
+      localStorage.setItem("username", userDetails.username);
+    } catch (error: unknown) {
+      setIsLoggedIn(() => false);
+      localStorage.setItem("isLoggedIn", "false");
+      return error;
+    }
+  };
+
   const login = async (username: string, password: string) => {
     try {
       const response = await axios.post(
@@ -50,16 +38,19 @@ export function useAuthService(): AuthServiceProps {
         },
         { withCredentials: true }
       );
-
+      const user_id = response.data.user_id;
       localStorage.setItem("isLoggedIn", "true");
-      setIsLoggedIn(() => true);
-      // getUserDetails();
+      localStorage.setItem("user_id", user_id);
+      setIsLoggedIn(true);
+      getUserDetails();
     } catch (error: unknown) {
       return error;
     }
   };
   const logout = () => {
     localStorage.setItem("isLoggedIn", "false");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("username");
     setIsLoggedIn(false);
   };
   return { login, isLoggedIn, logout };
