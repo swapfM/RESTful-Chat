@@ -6,19 +6,16 @@ export function useAuthService(): AuthServiceProps {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     const loggedIn = localStorage.getItem("isLoggedIn");
 
-    if (loggedIn !== null) {
-      return Boolean(loggedIn);
-    } else {
-      return false;
-    }
+    return loggedIn !== null && loggedIn === "true";
   });
 
   const getUserDetails = async () => {
     try {
       const userId = localStorage.getItem("userId");
       const accessToken = localStorage.getItem("access_token");
+      console.log(userId);
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/token/user_id=${userId}`,
+        `http://127.0.0.1:8000/api/account/?user_id=${userId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -59,5 +56,13 @@ export function useAuthService(): AuthServiceProps {
       return error;
     }
   };
-  return { login, isLoggedIn };
+  const logout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+    localStorage.setItem("isLoggedIn", "false");
+    setIsLoggedIn(false);
+  };
+  return { login, isLoggedIn, logout };
 }
