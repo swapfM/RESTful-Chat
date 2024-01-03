@@ -56,6 +56,7 @@ export function useAuthService(): AuthServiceProps {
         { withCredentials: true }
       );
     } catch (refreshError) {
+      console.log("errorrr");
       return Promise.reject(refreshError);
     }
   };

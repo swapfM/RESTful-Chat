@@ -54,7 +54,7 @@ const MessageInterface = (props: ServerChannelProps) => {
     ? `ws://127.0.0.1:8000/${serverId}/${channelId}`
     : null;
 
-  const [reconnectionAttempt, setReconnectionAttempt] = useState<number>(0);
+  const [reconnectionAttempt, setReconnectionAttempt] = useState(0);
   const maxConnectionAttempts = 4;
 
   const { sendJsonMessage } = useWebSocket(socketUrl, {
@@ -98,6 +98,7 @@ const MessageInterface = (props: ServerChannelProps) => {
       }
       return true;
     },
+    reconnectInterval: 1000,
   });
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
