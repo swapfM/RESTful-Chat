@@ -8,6 +8,7 @@ from account.views import (
     JWTCookieTokenObtainPairView,
     JWTCookieTokenRefreshView,
     LogoutApiView,
+    RegisterAPIView,
 )
 from django.conf import settings
 from django.conf.urls.static import static
@@ -32,6 +33,7 @@ urlpatterns = [
         "api/token/refresh/", JWTCookieTokenRefreshView.as_view(), name="token_refresh"
     ),
     path("api/logout/", LogoutApiView.as_view(), name="logout"),
+    path("api/register/", RegisterAPIView.as_view(), name="register"),
 ] + router.urls
 
 websocket_utlpatterns = [
@@ -40,3 +42,4 @@ websocket_utlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

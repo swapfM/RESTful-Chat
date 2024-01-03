@@ -8,12 +8,15 @@ import Login from "./screens/Login";
 import { AuthServiceProvider } from "./context/AuthContext";
 import TestLogin from "./screens/TestLogin";
 import ProtectedRoute from "./services/ProtectedRoute";
+import Register from "./screens/Register";
 
 const App = () => {
   return (
     <BrowserRouter>
       <AuthServiceProvider>
         <ToggleColorMode>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/explore/:categoryName" element={<Explore />} />
@@ -25,7 +28,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            <Route path="/login" element={<Login />} />
+
             <Route
               path="/testlogin"
               element={

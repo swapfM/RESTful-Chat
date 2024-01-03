@@ -31,6 +31,22 @@ export function useAuthService(): AuthServiceProps {
     }
   };
 
+  const register = async (username: string, password: string) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/register/`,
+        {
+          username,
+          password,
+        },
+        { withCredentials: true }
+      );
+      return response.status;
+    } catch (error: unknown) {
+      return error;
+    }
+  };
+
   const login = async (username: string, password: string) => {
     try {
       const response = await axios.post(
@@ -79,5 +95,5 @@ export function useAuthService(): AuthServiceProps {
       return Promise.reject(refreshError);
     }
   };
-  return { login, isLoggedIn, logout, refreshAccessToken };
+  return { register, login, isLoggedIn, logout, refreshAccessToken };
 }

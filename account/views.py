@@ -3,15 +3,41 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.views import APIView
+from rest_framework import status
 
 from .models import Account
 from .serializer import (
     AccountSerializer,
     CustomTokenObtainPairSerializer,
     JWTCookieTokenRefreshSerializer,
+    RegisterSerializer,
 )
 from .schema import list_account_docs
 from django.conf import settings
+
+
+class RegisterAPIView(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data["username"]
+            forbidden_usernames = ["admin", "root", "superuser"]
+
+            if username is forbidden_usernames:
+                return Response(
+                    {"error": "username not allowed"}, status=status.HTTP_409_CONFLICT
+                )
+            serializer.save()
+
+            return Response(serializer.data, staturs=status.HTTP_201_CREATED)
+
+        errors = serializer.errors
+        if "username" in errors and "non_field_errors" not in errors:
+            return Response(
+                {"error": "username already exists"}, status=status.HTTP_409_CONFLICT
+            )
+
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AccountViewSet(viewsets.ViewSet):
