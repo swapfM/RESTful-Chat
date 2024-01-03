@@ -7,6 +7,7 @@ from account.views import (
     AccountViewSet,
     JWTCookieTokenObtainPairView,
     JWTCookieTokenRefreshView,
+    LogoutApiView,
 )
 from django.conf import settings
 from django.conf.urls.static import static
@@ -30,6 +31,7 @@ urlpatterns = [
     path(
         "api/token/refresh/", JWTCookieTokenRefreshView.as_view(), name="token_refresh"
     ),
+    path("api/logout/", LogoutApiView.as_view(), name="logout"),
 ] + router.urls
 
 websocket_utlpatterns = [

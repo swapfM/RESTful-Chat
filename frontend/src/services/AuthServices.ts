@@ -62,12 +62,22 @@ export function useAuthService(): AuthServiceProps {
       return Promise.reject(refreshError);
     }
   };
-  const logout = () => {
+  const logout = async () => {
     localStorage.setItem("isLoggedIn", "false");
     localStorage.removeItem("user_id");
     localStorage.removeItem("username");
     setIsLoggedIn(false);
     navigate("/login");
+
+    try {
+      await axios.post(
+        `${BASE_URL}/api/logout/`,
+        {},
+        { withCredentials: true }
+      );
+    } catch (refreshError) {
+      return Promise.reject(refreshError);
+    }
   };
   return { login, isLoggedIn, logout, refreshAccessToken };
 }

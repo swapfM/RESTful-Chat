@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.views import APIView
 
 from .models import Account
 from .serializer import (
@@ -55,3 +56,12 @@ class JWTCookieTokenObtainPairView(JWTSetCookieMixin, TokenObtainPairView):
 
 class JWTCookieTokenRefreshView(JWTSetCookieMixin, TokenRefreshView):
     serializer_class = JWTCookieTokenRefreshSerializer
+
+
+class LogoutApiView(APIView):
+    def post(self, rquest, format=None):
+        response = Response("logout successul")
+
+        response.set_cookie("refresh_token", "", expires=0)
+        response.set_cookie("access_token", "", expires=0)
+        return response
