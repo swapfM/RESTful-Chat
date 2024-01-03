@@ -2,6 +2,7 @@ import axios from "axios";
 import { AuthServiceProps } from "../@types/auth-service";
 import { useState } from "react";
 import { BASE_URL } from "../../config";
+import { useNavigate } from "react-router-dom";
 
 export function useAuthService(): AuthServiceProps {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
@@ -10,6 +11,7 @@ export function useAuthService(): AuthServiceProps {
     return loggedIn !== null && loggedIn === "true";
   });
 
+  const navigate = useNavigate();
   const getUserDetails = async () => {
     try {
       const user_id = localStorage.getItem("user_id");
@@ -65,6 +67,7 @@ export function useAuthService(): AuthServiceProps {
     localStorage.removeItem("user_id");
     localStorage.removeItem("username");
     setIsLoggedIn(false);
+    navigate("/login");
   };
   return { login, isLoggedIn, logout, refreshAccessToken };
 }
