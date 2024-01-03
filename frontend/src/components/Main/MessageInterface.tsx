@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { useParams } from "react-router-dom";
-import useWebSocket from "react-use-websocket";
-import useCrud from "../../hooks/useCrud";
+
 import { Server } from "../../@types/server";
 import {
   Avatar,
@@ -12,12 +10,11 @@ import {
   ListItemText,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import MessageInterfaceChannels from "./MessageInterfaceChannels";
-import { useTheme } from "@mui/material/styles";
 import Scroll from "./Scroll";
-import React from "react";
-import { useAuthService } from "../../services/AuthServices";
+import useChatWebSocket from "../../services/chatService";
 
 interface SendMessageData {
   type: string;
@@ -37,69 +34,15 @@ interface Message {
 const MessageInterface = (props: ServerChannelProps) => {
   const theme = useTheme();
   const { data } = props;
-  const [newMessage, setNewMessage] = useState<Message[]>([]);
 
-  const { refreshAccessToken, logout } = useAuthService();
-
-  const [message, setMessage] = useState("");
   const { serverId, channelId } = useParams();
-  const server_name = data?.[0]?.name ?? "Server";
 
-  const { fetchData } = useCrud<Server>(
-    [],
-    `/messages/?channel_id=${channelId}`
+  const { newMessage, message, setMessage, sendJsonMessage } = useChatWebSocket(
+    channelId || "",
+    serverId || ""
   );
 
-  const socketUrl = channelId
-    ? `ws://127.0.0.1:8000/${serverId}/${channelId}`
-    : null;
-
-  const [reconnectionAttempt, setReconnectionAttempt] = useState(0);
-  const maxConnectionAttempts = 4;
-
-  const { sendJsonMessage } = useWebSocket(socketUrl, {
-    onOpen: async () => {
-      try {
-        const data = await fetchData();
-        setNewMessage([]);
-        setNewMessage(Array.isArray(data) ? data : []);
-        console.log("connected");
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    onClose: (event: CloseEvent) => {
-      if (event.code == 4001) {
-        console.log("Not authenticated");
-        refreshAccessToken().catch((error) => {
-          if (error.response && error.response.status === 401) {
-            logout();
-          }
-        });
-      }
-      console.log("closed");
-      setReconnectionAttempt((prev) => prev + 1);
-    },
-    onError: () => {
-      console.log("Error");
-    },
-    onMessage: (message) => {
-      const data = JSON.parse(message.data);
-      setNewMessage((prev) => [...prev, data.new_message]);
-      setMessage("");
-    },
-    shouldReconnect: (closeEvent) => {
-      if (
-        closeEvent.code === 4001 &&
-        reconnectionAttempt >= maxConnectionAttempts
-      ) {
-        setReconnectionAttempt(0);
-        return false;
-      }
-      return true;
-    },
-    reconnectInterval: 1000,
-  });
+  const server_name = data?.[0]?.name ?? "Server";
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
