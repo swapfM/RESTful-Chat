@@ -11,3 +11,12 @@
 - __Server management:__ Users can create their own server belonging to the given categories. Users must join the server before chatting.
 - __Chat history and storage:__ All the chats are displayed along with timestamp. Chats are stored in database.
 - __Group chat functionality:__ Users can chat in groups in real time.
+
+
+### Technologies Used
+
+- __Frontend:__ React TypeScript
+- __Backend:__ Django Rest Framework, Uvicorn, Django-Channels
+- __Database:__ PostgreSQL
+
+
