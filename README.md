@@ -26,6 +26,7 @@
 ```
 git clone https://github.com/swapfM/RESTful-Chat.git
 ```
+
 - Set up and run the `frontend` server
 ```
 npm install
@@ -43,4 +44,17 @@ python -m venv env
 - Configure the database settings to connect to PostgreSQL.
 - Run `python manage.py migrate` to apply migrations.
 - Run `uvicorn backend.asgi:application --port 8000` to start the backend server.
+
+### Env Variables
+
+Create a .env file in the root and add the following variables
+
+```
+DB_NAME = database user_name
+DB_PASS = database password
+DB_HOST = database host_url_endpoint
+DB_PORT = database port
+
+```
+
 
