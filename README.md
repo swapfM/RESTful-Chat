@@ -20,3 +20,27 @@
 - __Database:__ PostgreSQL
 
 
+### Getting Started
+
+-  Clone the repository
+```
+git clone https://github.com/swapfM/RESTful-Chat.git
+```
+- Set up and run the `frontend` server
+```
+npm install
+cd frontend
+npm install
+```
+- Navigate to the `backend` directory.
+
+- Set up a virtual environment (recommended)
+```
+python -m venv env
+.\env\Scripts\activate
+```
+- Run `pip install -r requirements.txt` to install Python dependencies.
+- Configure the database settings to connect to PostgreSQL.
+- Run `python manage.py migrate` to apply migrations.
+- Run `python manage.py runserver` to start the backend server.
+
