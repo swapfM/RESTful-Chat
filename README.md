@@ -42,5 +42,5 @@ python -m venv env
 - Run `pip install -r requirements.txt` to install Python dependencies.
 - Configure the database settings to connect to PostgreSQL.
 - Run `python manage.py migrate` to apply migrations.
-- Run `python manage.py runserver` to start the backend server.
+- Run `uvicorn backend.asgi:application --port 8000` to start the backend server.
 
